@@ -24,22 +24,22 @@ ModelImporter:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material
-    second: {fileID: 2100000, guid: 71c2874a519f860418a94f7fdf2dc00f, type: 2}
+    second: {fileID: 2100000, guid: b161bb0605c6c9043b527b1a70c4fa88, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.001
-    second: {fileID: 2100000, guid: 024f35c7a64c6014aa5eb7214c6520ab, type: 2}
+    second: {fileID: 2100000, guid: e3cc9f16d17a97b41b35fadf85ac3ccd, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.002
-    second: {fileID: 2100000, guid: bb2db698d54d24649806e46d628c9971, type: 2}
+    second: {fileID: 2100000, guid: b289bff16ff0f0e4386cb0f8255b18ca, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
       name: Material.003
-    second: {fileID: 2100000, guid: f26fd0aee85a34f4f9ac32453f773fd2, type: 2}
+    second: {fileID: 2100000, guid: 9b6f57b1017932944879fa7bc60b758d, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -79,7 +79,7 @@ ModelImporter:
     importCameras: 1
     importLights: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     optimizeMeshForGPU: 1
     keepQuads: 0
