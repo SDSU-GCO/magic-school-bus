@@ -1,10 +1,45 @@
 fileFormatVersion: 2
-guid: a3bd0c9ca98c35d43be9990a7f27612a
+guid: f5788dc4d9311e441a5ffdcdbce69510
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
-    2186277476908879412: ImportLogs
-  externalObjects: {}
+    100000: Corner
+    100002: Wall.008
+    100004: //RootNode
+    400000: Corner
+    400002: Wall.008
+    400004: //RootNode
+    2100000: Material.003
+    2100002: Material.002
+    2100004: Material
+    2100006: Material.001
+    2300000: Corner
+    2300002: Wall.008
+    3300000: Corner
+    3300002: Wall.008
+    4300000: Corner
+    4300002: Wall.008
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material
+    second: {fileID: 2100000, guid: 71c2874a519f860418a94f7fdf2dc00f, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.001
+    second: {fileID: 2100000, guid: 024f35c7a64c6014aa5eb7214c6520ab, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.002
+    second: {fileID: 2100000, guid: bb2db698d54d24649806e46d628c9971, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Material.003
+    second: {fileID: 2100000, guid: f26fd0aee85a34f4f9ac32453f773fd2, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -84,7 +119,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
