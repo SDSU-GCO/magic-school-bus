@@ -14,13 +14,19 @@ namespace MSB
     public class FreelookRubberBand : MonoBehaviour
     {
         [Tooltip("Higher values will cause the camera to auto-orbit more aggressively.")]
-        public float                m_followBias         = 1f;
-        public float                m_autoOrbitMaxSpeed  = 45f;
-        public float                m_inputOrbitSpeed    = 60f;
-        public string               m_bindingXAxis       = "";
-        public string               m_bindingResetButton = "";
-        private CinemachineFreeLook m_Freelook;
-        private Vector3             m_prevTargetPosition;
+        public float  m_followBias         = 1f;
+        public float  m_autoOrbitMaxSpeed  = 45f;
+        public float  m_inputOrbitSpeed    = 60f;
+        public float  m_backwardsBiasAngle = -10f;
+        public string m_bindingXAxis       = "";
+        public string m_bindingResetButton = "";
+
+        [HideInInspector] public float m_xAxisValue               = 0f;
+        [HideInInspector] public bool  m_resetActivate            = false;
+        [HideInInspector] public bool  m_overrideXAxisInput       = false;
+        [HideInInspector] public bool  m_overrideResetButtonInput = false;
+        private CinemachineFreeLook    m_Freelook;
+        private Vector3                m_prevTargetPosition;
 
         private void Awake()
         {
@@ -33,17 +39,18 @@ namespace MSB
 
         private void LateUpdate()
         {
-            if (m_bindingXAxis.Length > 0)
+            if (m_overrideXAxisInput)
+                m_Freelook.m_XAxis.Value += m_xAxisValue * m_inputOrbitSpeed * Time.deltaTime;
+            else if (m_bindingXAxis.Length > 0)
                 m_Freelook.m_XAxis.Value += Input.GetAxis(m_bindingXAxis) * m_inputOrbitSpeed * Time.deltaTime;
-            if (m_bindingResetButton.Length > 0)
+            bool shouldResetInput         = m_bindingResetButton.Length > 0 && Input.GetButtonDown(m_bindingResetButton);
+            if (m_overrideResetButtonInput ? m_resetActivate : shouldResetInput)
             {
-                if (Input.GetButtonDown(m_bindingResetButton))
-                {
-                    m_Freelook.m_YAxis.Value = 0.5f;
-                    Vector3 targetForward    = m_Freelook.m_Follow.forward;
-                    targetForward.y          = 0f;
-                    m_Freelook.m_XAxis.Value = Vector3.SignedAngle(transform.forward, targetForward, Vector3.up);
-                }
+                m_Freelook.m_YAxis.Value = 0.5f;
+                Vector3 targetForward    = m_Freelook.m_Follow.forward;
+                targetForward.y          = 0f;
+                m_Freelook.m_XAxis.Value = Vector3.SignedAngle(transform.forward, targetForward, Vector3.up);
+                m_resetActivate          = false;
             }
 
             // Unity API uses positive angles in clockwise direction. This makes the trig confusing.
@@ -82,12 +89,19 @@ namespace MSB
                 // Arc cosine always returns an angle between 0 and 180.
                 // This means that if our original angle was negative, our camera will "jump" to the other side (left side to right side).
                 // We correct this by multiplying by the sign of our original angle.
-                targetRelativeAngle = Mathf.Acos(currRelativeAngleCos + deltaPosition.magnitude * m_followBias / radius) * Mathf.Rad2Deg * Mathf.Sign(currRelativeAngle);
+                // For moving straight towards the camera every frame, the sign of the relative angle may flip causing jerky behavior.
+                // The bias value fixes this.
+                targetRelativeAngle = Mathf.Acos(currRelativeAngleCos + deltaPosition.magnitude * m_followBias / radius) * Mathf.Rad2Deg;
+                float backwardsMag  = Mathf.Abs(m_backwardsBiasAngle);
+                if (currRelativeAngle < -180f + backwardsMag || currRelativeAngle > 180f - backwardsMag)
+                    targetRelativeAngle *= Mathf.Sign(m_backwardsBiasAngle);
+                else
+                    targetRelativeAngle *= Mathf.Sign(currRelativeAngle);
             }
             // Now we know our goal angle, we need to remap it back to world space.
             // We also limit how much we can rotate towards our goal angle.
             // That helps stop the sudden jerk when our camera get close to right behind the fascination.
-            float deltaAngle         = targetRelativeAngle - currRelativeAngle;
+            float deltaAngle         = MathUtilities.WrapAngle180(targetRelativeAngle - currRelativeAngle);
             deltaAngle               = Mathf.Clamp(deltaAngle, -m_autoOrbitMaxSpeed * Time.deltaTime, m_autoOrbitMaxSpeed * Time.deltaTime);
             m_Freelook.m_XAxis.Value = -MathUtilities.WrapAngle180(currAngle + deltaAngle);
             m_prevTargetPosition     = currTargetPosition;
